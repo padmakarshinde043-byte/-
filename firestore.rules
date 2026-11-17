@@ -1,0 +1,152 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Verified central office administrators
+    function isAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email_verified == true &&
+        (
+          request.auth.token.email == 'padmakarshinde043@gmail.com' ||
+          request.auth.token.email == '123dhananjay.patil@gmail.com'
+        );
+    }
+
+    function isOptionalString(data, field, maxLen) {
+      return !(field in data) || (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    function isValidFamilyMembers(members) {
+      return members is list &&
+        members.size() <= 15 &&
+        (
+          members.size() == 0 ||
+          (
+            members[0] is map &&
+            members[0].keys().hasOnly(['id', 'srNo', 'fullName', 'relation', 'dob', 'occupation', 'education']) &&
+            members[0].fullName is string && members[0].fullName.size() <= 150
+          )
+        );
+    }
+
+    function isValidApplication(data, applicationId) {
+      return data.keys().hasAll([
+          'id', 'targetLevel', 'targetWing', 'targetPost',
+          'fullName', 'gender', 'dob', 'age', 'mobile',
+          'village', 'district', 'occupationType',
+          'isLifeMember', 'isPoliticalActive', 'familyMembers',
+          'agreedToTerms', 'submissionDate', 'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'targetLevel', 'division', 'targetDistrict', 'targetWing', 'targetPost',
+          'fullName', 'gender', 'dob', 'age', 'mobile', 'alternateMobile', 'email',
+          'houseNo', 'street', 'village', 'post', 'taluka', 'district', 'pincode',
+          'occupationType', 'designationOrBusiness',
+          'isLifeMember', 'lifeMemberSince', 'lifeMemberNo',
+          'isPoliticalActive', 'politicalParty', 'politicalDesignation',
+          'monthlyContribution', 'paymentFrequency',
+          'familyMembers', 'photoUrl', 'signatureUrl',
+          'agreedToTerms', 'submissionDate', 'submissionPlace', 'createdAt'
+        ]) &&
+        data.id is string && data.id == applicationId &&
+        data.id.size() >= 3 && data.id.size() <= 40 &&
+        data.id.matches('^[a-zA-Z0-9_\\-]+$') &&
+        data.targetLevel is string &&
+        data.targetLevel in ['राज्य कार्यकारिणी', 'विभागीय कार्यकारिणी', 'जिल्हा कार्यकारिणी', 'इतर कक्ष कार्यकारिणी'] &&
+        data.targetLevel.size() <= 50 &&
+        isOptionalString(data, 'division', 100) &&
+        isOptionalString(data, 'targetDistrict', 100) &&
+        data.targetWing is string && data.targetWing.size() <= 150 &&
+        data.targetPost is string && data.targetPost.size() >= 1 && data.targetPost.size() <= 80 &&
+        data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 150 &&
+        data.gender is string && data.gender in ['पुरुष', 'स्त्री', 'इतर'] && data.gender.size() <= 20 &&
+        data.dob is string && data.dob.size() >= 4 && data.dob.size() <= 30 &&
+        (data.age is number && data.age >= 0 && data.age <= 120) &&
+        data.mobile is string && data.mobile.size() <= 15 && data.mobile.matches('^[0-9]{10}$') &&
+        isOptionalString(data, 'alternateMobile', 15) &&
+        isOptionalString(data, 'email', 150) &&
+        isOptionalString(data, 'houseNo', 120) &&
+        isOptionalString(data, 'street', 150) &&
+        data.village is string && data.village.size() >= 1 && data.village.size() <= 120 &&
+        isOptionalString(data, 'post', 120) &&
+        isOptionalString(data, 'taluka', 120) &&
+        data.district is string && data.district.size() >= 1 && data.district.size() <= 100 &&
+        isOptionalString(data, 'pincode', 10) &&
+        data.occupationType is string && data.occupationType.size() >= 1 && data.occupationType.size() <= 60 &&
+        isOptionalString(data, 'designationOrBusiness', 180) &&
+        data.isLifeMember is bool &&
+        isOptionalString(data, 'lifeMemberSince', 30) &&
+        isOptionalString(data, 'lifeMemberNo', 50) &&
+        data.isPoliticalActive is bool &&
+        isOptionalString(data, 'politicalParty', 120) &&
+        isOptionalString(data, 'politicalDesignation', 120) &&
+        (!('monthlyContribution' in data) || data.monthlyContribution == null || (data.monthlyContribution is number && data.monthlyContribution >= 0 && data.monthlyContribution <= 1000000)) &&
+        (!('paymentFrequency' in data) || (data.paymentFrequency is string && data.paymentFrequency in ['सहामाही', 'वार्षिक'] && data.paymentFrequency.size() <= 30)) &&
+        isValidFamilyMembers(data.familyMembers) &&
+        isOptionalString(data, 'photoUrl', 260000) &&
+        isOptionalString(data, 'signatureUrl', 260000) &&
+        data.agreedToTerms is bool && data.agreedToTerms == true &&
+        data.submissionDate is string && data.submissionDate.size() >= 4 && data.submissionDate.size() <= 30 &&
+        isOptionalString(data, 'submissionPlace', 120) &&
+        data.createdAt == request.time;
+    }
+
+    function isValidSheetConfig(data) {
+      return data.keys().hasAll([
+          'spreadsheetId', 'spreadsheetUrl', 'sheetTitle',
+          'syncedCount', 'lastSyncedAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'spreadsheetId', 'spreadsheetUrl', 'sheetTitle',
+          'syncedCount', 'lastSyncedAt', 'updatedAt'
+        ]) &&
+        data.spreadsheetId is string && data.spreadsheetId.size() >= 5 && data.spreadsheetId.size() <= 150 &&
+        data.spreadsheetUrl is string && data.spreadsheetUrl.size() >= 10 && data.spreadsheetUrl.size() <= 400 &&
+        data.sheetTitle is string && data.sheetTitle.size() >= 1 && data.sheetTitle.size() <= 120 &&
+        data.syncedCount is number && data.syncedCount >= 0 && data.syncedCount <= 100000 &&
+        data.lastSyncedAt is string && data.lastSyncedAt.size() <= 60 &&
+        data.updatedAt == request.time;
+    }
+
+    match /applications/{applicationId} {
+      allow get: if isValidId(applicationId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(applicationId) && isValidApplication(incoming(), applicationId);
+      allow update, delete: if false;
+    }
+
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId) && settingId == 'googleSheet' && isAdmin();
+      allow list: if false;
+      allow create: if isValidId(settingId) && settingId == 'googleSheet' && isAdmin() && isValidSheetConfig(incoming());
+      allow update: if isValidId(settingId) && settingId == 'googleSheet' && isAdmin() &&
+        isValidSheetConfig(incoming()) &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'spreadsheetId', 'spreadsheetUrl', 'sheetTitle',
+          'syncedCount', 'lastSyncedAt', 'updatedAt'
+        ]);
+      allow delete: if isValidId(settingId) && settingId == 'googleSheet' && isAdmin();
+    }
+  }
+}

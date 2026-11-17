@@ -1,0 +1,240 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "Maratha Seva Sangh executive body officer information form submission",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 40,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Official application registration ID (e.g., MSS-2026-482915)"
+        },
+        "targetLevel": {
+          "type": "string",
+          "enum": [
+            "राज्य कार्यकारिणी",
+            "विभागीय कार्यकारिणी",
+            "जिल्हा कार्यकारिणी",
+            "इतर कक्ष कार्यकारिणी"
+          ],
+          "maxLength": 50
+        },
+        "division": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "targetDistrict": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "targetWing": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "targetPost": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 150
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["पुरुष", "स्त्री", "इतर"],
+          "maxLength": 20
+        },
+        "dob": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 30
+        },
+        "age": {
+          "type": "number"
+        },
+        "mobile": {
+          "type": "string",
+          "pattern": "^[0-9]{10}$",
+          "maxLength": 15
+        },
+        "alternateMobile": {
+          "type": "string",
+          "maxLength": 15
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "houseNo": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "street": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "village": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "post": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "taluka": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "district": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "pincode": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "occupationType": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "designationOrBusiness": {
+          "type": "string",
+          "maxLength": 180
+        },
+        "isLifeMember": {
+          "type": "boolean"
+        },
+        "lifeMemberSince": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "lifeMemberNo": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "isPoliticalActive": {
+          "type": "boolean"
+        },
+        "politicalParty": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "politicalDesignation": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "monthlyContribution": {
+          "type": "number"
+        },
+        "paymentFrequency": {
+          "type": "string",
+          "enum": ["सहामाही", "वार्षिक"],
+          "maxLength": 30
+        },
+        "familyMembers": {
+          "type": "array",
+          "description": "Up to 15 family member objects"
+        },
+        "photoUrl": {
+          "type": "string",
+          "maxLength": 260000
+        },
+        "signatureUrl": {
+          "type": "string",
+          "maxLength": 260000
+        },
+        "agreedToTerms": {
+          "type": "boolean"
+        },
+        "submissionDate": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "submissionPlace": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "targetLevel",
+        "targetWing",
+        "targetPost",
+        "fullName",
+        "gender",
+        "dob",
+        "age",
+        "mobile",
+        "village",
+        "district",
+        "occupationType",
+        "isLifeMember",
+        "isPoliticalActive",
+        "familyMembers",
+        "agreedToTerms",
+        "submissionDate",
+        "createdAt"
+      ]
+    },
+    "SheetConfig": {
+      "title": "SheetConfig",
+      "description": "Linked Google Sheet synchronization metadata managed by admin",
+      "type": "object",
+      "properties": {
+        "spreadsheetId": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 150
+        },
+        "spreadsheetUrl": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 400
+        },
+        "sheetTitle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "syncedCount": {
+          "type": "number"
+        },
+        "lastSyncedAt": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "spreadsheetId",
+        "spreadsheetUrl",
+        "sheetTitle",
+        "syncedCount",
+        "lastSyncedAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Publicly submittable, admin-only readable executive body applications"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SheetConfig" },
+      "description": "Admin-only Google Sheets integration configuration"
+    }
+  }
+}

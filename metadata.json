@@ -1,0 +1,6 @@
+{
+  "name": "मराठा सेवा संघ - पदाधिकारी माहिती संकलन अर्ज २०२६",
+  "description": "मराठा सेवा संघ राज्य, विभागीय, जिल्हा व ३३ कक्षातील इच्छुक पदाधिकाऱ्यांसाठी अधिकृत डिजिटल माहिती संकलन पोर्टल व एडमिन डॅशबोर्ड.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
