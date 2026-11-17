@@ -108,7 +108,7 @@ export async function submitApplicationToFirestore(
     division: trimToMax(formData.division, 100),
     targetDistrict: trimToMax(formData.targetDistrict, 100),
     targetWing:
-      trimToMax(formData.targetWing, 150) || 'मराठा सेवा संघ (मुख्य कक्ष)',
+      trimToMax(formData.targetWing, 150) || 'जिजाऊ ब्रिगेड',
     targetPost: trimToMax(formData.targetPost, 80),
     fullName: trimToMax(formData.fullName, 150),
     gender: formData.gender,

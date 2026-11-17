@@ -77,8 +77,8 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
 
       <div className="flex-1 space-y-2 text-center sm:text-left">
         <div>
-          <h4 className="text-base font-bold text-[#5c1d05]">अर्जदाराचा पासपोर्ट साईझ फोटो</h4>
-          <p className="text-sm text-[#431407] mt-0.5">
+          <h4 className="text-sm sm:text-base font-bold text-[#5c1d05]">अर्जदाराचा पासपोर्ट साईझ फोटो</h4>
+          <p className="text-xs sm:text-sm text-[#431407] mt-0.5">
             कृपया आपला स्पष्ट चेहरा असलेला अलिकडचा पासपोर्ट फोटो अपलोड करा.
           </p>
         </div>
@@ -96,7 +96,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-sm font-bold shadow-xs transition-all cursor-pointer border border-[#9a3412]"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer border border-[#9a3412]"
           >
             <Upload className="w-4 h-4" />
             फोटो निवडा

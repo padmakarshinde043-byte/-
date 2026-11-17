@@ -139,11 +139,11 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
     <div className="bhagwa-texture-soft border border-[#e9bd92] rounded-xl p-4">
       <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
         <div>
-          <h4 className="text-base font-bold text-[#5c1d05] flex items-center gap-1.5">
+          <h4 className="text-sm sm:text-base font-bold text-[#5c1d05] flex items-center gap-1.5">
             <PenTool className="w-4 h-4 text-[#c2410c]" />
             अर्जदाराची स्वाक्षरी
           </h4>
-          <p className="text-sm text-[#431407]">
+          <p className="text-xs sm:text-sm text-[#431407]">
             खालील बॉक्समध्ये बोटाने / माऊसने स्वाक्षरी करा किंवा स्वाक्षरीचा फोटो अपलोड करा.
           </p>
         </div>

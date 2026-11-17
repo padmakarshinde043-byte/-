@@ -637,10 +637,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onChange={(e) => setSelectedWing(e.target.value)}
                 className="w-full px-2.5 py-1.5 border border-[#e7b587] rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#c2410c]"
               >
-                <option value="all">सर्व 33 कक्ष</option>
-                {MARATHA_SEVA_SANGH_WINGS.map((w) => (
+                <option value="all">सर्व 34 कक्ष</option>
+                {MARATHA_SEVA_SANGH_WINGS.map((w, idx) => (
                   <option key={w} value={w}>
-                    {w}
+                    {idx + 1}) {w}
                   </option>
                 ))}
               </select>
