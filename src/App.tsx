@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
 import { Header } from './components/Header';
 import { ApplicationForm } from './components/ApplicationForm';
 import { Footer } from './components/Footer';
@@ -10,8 +9,7 @@ import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ApplicationFormData, AdminUser } from './types/index';
-import { auth } from './utils/firebase';
-import { googleSignOut, isAllowedAdminEmail } from './utils/googleSheets';
+import { googleSignOut } from './utils/googleSheets';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'form' | 'admin'>('form');
@@ -30,33 +28,6 @@ export default function App() {
       return null;
     }
   });
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (fbUser) => {
-      if (fbUser && fbUser.emailVerified && isAllowedAdminEmail(fbUser.email)) {
-        const userObj: AdminUser = {
-          username: fbUser.email || 'admin',
-          name:
-            fbUser.displayName || 'धनंजय पाटील - केंद्रीय कार्यालयीन सचिव',
-          role: 'Admin',
-        };
-        setAdminUser(userObj);
-        try {
-          sessionStorage.setItem('mss_admin_session', JSON.stringify(userObj));
-        } catch {
-          // Ignore storage error
-        }
-      } else {
-        setAdminUser(null);
-        try {
-          sessionStorage.removeItem('mss_admin_session');
-        } catch {
-          // Ignore storage error
-        }
-      }
-    });
-    return () => unsub();
-  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -78,7 +49,11 @@ export default function App() {
   };
 
   const handleAdminLogout = async () => {
-    await googleSignOut();
+    try {
+      await googleSignOut();
+    } catch {
+      // Ignore if Google sign-in was not active
+    }
     setAdminUser(null);
     try {
       sessionStorage.removeItem('mss_admin_session');

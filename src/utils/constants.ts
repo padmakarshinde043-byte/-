@@ -15,10 +15,10 @@ export const OFFICIAL_NOTICE = {
   appealText:
     'मराठा सेवा संघ सर्व आजी-माजी पदाधिकारी, मराठा सेवा संघ प्रणित सर्व 33 कक्षातील आजी-माजी पदाधिकारी, मराठा सेवा संघ हितचिंतक सर्व समाज बांधव, परिवर्तनवादी चळवळीत कार्य करू इच्छिणारे सर्व समाज बांधव. आपणा सर्वांना मराठा सेवा संघ केंद्रीय कार्यालय पत्र जा. क्र. 32/2026-27 दिनांक 05-11-2026 च्या अनुषंगाने विनम्र आवाहन करण्यात येत आहे की, मराठा सेवा संघ राज्य कार्यकारिणी, विभागीय कार्यकारणी, जिल्हा कार्यकारणी व इतर मराठा सेवा संघ प्रणित 33 कक्षामध्ये कार्य करण्यासाठी इच्छुक असणाऱ्यांनी खालील नमुना अर्जामध्ये स्वतःची माहिती भरून दिनांक 30 नोव्हेंबर 2026 पर्यंत पाठवावी ही विनंती.',
   scannedFormPath: './assets/aistudio/Screenshot_2026-11-16-23-39-21-255_com.xodo.pdf.reader_d1ccfa95.jpg',
-  jijauPortraitPath: './assets/aistudio/jijau_portrait.jpg',
-  shivajiPortraitPath: './assets/aistudio/shivaji_portrait.jpg',
-  mssLogoPath: './assets/aistudio/mss_logo_clean.png',
-  mssLogoRawPath: './assets/aistudio/IMG-20261116-WA0133_f030899c.jpg',
+  jijauPortraitPath: './assets/images/jijau_new.jpg',
+  shivajiPortraitPath: './assets/images/shivaji_new.jpg',
+  mssLogoPath: './assets/images/mss_logo_new.jpg',
+  mssLogoRawPath: './assets/images/mss_logo_new.jpg',
 };
 
 // चार प्रमुख कार्यकारिणी (Executive Bodies)

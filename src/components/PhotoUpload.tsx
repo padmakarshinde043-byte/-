@@ -26,14 +26,14 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 400;
+        const MAX_WIDTH = 320;
         const scale = Math.min(MAX_WIDTH / img.width, 1);
         canvas.width = img.width * scale;
         canvas.height = img.height * scale;
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
           onChange(compressedDataUrl);
         }
       };

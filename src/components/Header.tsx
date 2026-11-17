@@ -35,11 +35,11 @@ export const Header: React.FC<HeaderProps> = () => {
         <div className="flex items-center justify-between gap-2 sm:gap-4 border-b border-sky-200 pb-3">
           {/* Left: Rajmata Jijau Photo */}
           <div className="flex flex-col items-center text-center w-20 sm:w-24 flex-shrink-0">
-            <div className="w-14 h-18 sm:w-18 sm:h-22 rounded border border-sky-300 p-0.5 bg-sky-50/60 shadow-2xs overflow-hidden">
+            <div className="w-16 h-20 sm:w-20 sm:h-24 rounded border border-sky-300 p-0.5 bg-sky-50/60 shadow-2xs overflow-hidden">
               <img
                 src={OFFICIAL_NOTICE.jijauPortraitPath}
                 alt="राजमाता जिजाऊ माँसाहेब"
-                className="w-full h-full object-cover rounded-sm"
+                className="w-full h-full object-cover object-top rounded-sm"
               />
             </div>
             <span className="text-[11px] sm:text-xs font-bold text-[#0f294a] mt-1">
@@ -49,11 +49,11 @@ export const Header: React.FC<HeaderProps> = () => {
 
           {/* Center: Maratha Seva Sangh Official Logo & Typography */}
           <div className="text-center flex-1">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-1 flex items-center justify-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-1.5 flex items-center justify-center rounded-full overflow-hidden bg-white border border-sky-200 shadow-2xs p-0.5">
               <img
                 src={OFFICIAL_NOTICE.mssLogoPath}
                 alt="मराठा सेवा संघ अधिकृत लोगो"
-                className="max-h-full max-w-full object-contain drop-shadow-2xs"
+                className="w-full h-full object-contain rounded-full"
               />
             </div>
 
@@ -71,11 +71,11 @@ export const Header: React.FC<HeaderProps> = () => {
 
           {/* Right: Chhatrapati Shivaji Maharaj Photo */}
           <div className="flex flex-col items-center text-center w-20 sm:w-24 flex-shrink-0">
-            <div className="w-14 h-18 sm:w-18 sm:h-22 rounded border border-sky-300 p-0.5 bg-sky-50/60 shadow-2xs overflow-hidden">
+            <div className="w-16 h-20 sm:w-20 sm:h-24 rounded border border-sky-300 p-0.5 bg-sky-50/60 shadow-2xs overflow-hidden">
               <img
                 src={OFFICIAL_NOTICE.shivajiPortraitPath}
                 alt="छत्रपती शिवाजी महाराज"
-                className="w-full h-full object-cover rounded-sm"
+                className="w-full h-full object-cover object-top rounded-sm"
               />
             </div>
             <span className="text-[11px] sm:text-xs font-bold text-[#0f294a] mt-1">

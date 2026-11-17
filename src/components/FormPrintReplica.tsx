@@ -81,17 +81,17 @@ export const FormPrintReplica: React.FC<FormPrintReplicaProps> = ({ application,
                   <img
                     src={OFFICIAL_NOTICE.jijauPortraitPath}
                     alt="राजमाता जिजाऊ"
-                    className="w-full h-full object-cover rounded-xs"
+                    className="w-full h-full object-cover object-top rounded-xs"
                   />
                 </div>
 
                 {/* Central Emblem & Title */}
                 <div className="text-center flex-1">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-1 flex items-center justify-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-1 flex items-center justify-center rounded-full overflow-hidden bg-white">
                     <img
                       src={OFFICIAL_NOTICE.mssLogoPath}
                       alt="मराठा सेवा संघ लोगो"
-                      className="max-h-full max-w-full object-contain"
+                      className="w-full h-full object-contain rounded-full"
                     />
                   </div>
                   <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f294a] font-noto tracking-wide">
@@ -110,7 +110,7 @@ export const FormPrintReplica: React.FC<FormPrintReplicaProps> = ({ application,
                   <img
                     src={OFFICIAL_NOTICE.shivajiPortraitPath}
                     alt="छत्रपती शिवाजी महाराज"
-                    className="w-full h-full object-cover rounded-xs"
+                    className="w-full h-full object-cover object-top rounded-xs"
                   />
                 </div>
               </div>

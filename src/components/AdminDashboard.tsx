@@ -22,9 +22,9 @@ import {
   SheetSyncResult,
 } from '../utils/googleSheets';
 import {
-  subscribeApplicationsFromFirestore,
-  fetchSheetConfigFromFirestore,
-  saveSheetConfigToFirestore,
+  fetchApplicationsFromFirestore,
+  getStoredSheetConfig,
+  saveStoredSheetConfig,
 } from '../utils/firestoreService';
 import { FormPrintReplica } from './FormPrintReplica';
 import {
@@ -61,6 +61,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 }) => {
   const [applications, setApplications] = useState<ApplicationFormData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null);
   const [fetchError, setFetchError] = useState('');
   const [selectedApp, setSelectedApp] = useState<ApplicationFormData | null>(
     null
@@ -77,7 +79,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [googleUser, setGoogleUser] = useState<FirebaseUser | null>(null);
   const [needsGoogleAuth, setNeedsGoogleAuth] = useState(true);
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState(false);
-  const [sheetConfig, setSheetConfig] = useState<SheetSyncResult | null>(null);
+  const [sheetConfig, setSheetConfig] = useState<SheetSyncResult | null>(() =>
+    getStoredSheetConfig()
+  );
   const [isSyncingSheet, setIsSyncingSheet] = useState(false);
   const [sheetMessage, setSheetMessage] = useState<{
     type: 'success' | 'error';
@@ -87,31 +91,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     'create' | 'update' | null
   >(null);
 
-  useEffect(() => {
-    setLoading(true);
+  const loadApplications = async (forceRefresh = false) => {
+    if (forceRefresh) {
+      setIsRefreshing(true);
+    } else {
+      setLoading(true);
+    }
     setFetchError('');
+    try {
+      const result = await fetchApplicationsFromFirestore(forceRefresh);
+      setApplications(result.apps);
+      setLastFetchedAt(result.fetchedAt);
+    } catch (err) {
+      console.error('Firestore list error:', err);
+      setFetchError(
+        'अर्ज माहिती लोड करताना अडचण आली. कृपया इंटरनेट कनेक्शन तपासून पुन्हा प्रयत्न करा.'
+      );
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  };
 
-    const unsubApps = subscribeApplicationsFromFirestore(
-      (apps) => {
-        setApplications(apps);
-        setLoading(false);
-      },
-      (err) => {
-        console.error('Firestore list error:', err);
-        setFetchError(
-          'अर्ज माहिती लोड करताना अडचण आली. कृपया अधिकृत प्रशासक Google खात्याने लॉगिन केल्याची खात्री करा.'
-        );
-        setLoading(false);
-      }
-    );
-
-    fetchSheetConfigFromFirestore()
-      .then((cfg) => {
-        if (cfg) setSheetConfig(cfg);
-      })
-      .catch(() => {
-        // Ignore if no sheet config exists yet
-      });
+  useEffect(() => {
+    loadApplications(false);
 
     const unsubAuth = initGoogleAuth(
       (fbUser) => {
@@ -125,7 +128,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     );
 
     return () => {
-      unsubApps();
       unsubAuth();
     };
   }, []);
@@ -294,7 +296,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
 
       setSheetConfig(result);
-      await saveSheetConfigToFirestore(result);
+      saveStoredSheetConfig(result);
 
       setSheetMessage({
         type: 'success',
@@ -334,7 +336,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </span>
               </h1>
               <p className="text-xs text-[#1e4070] font-medium">
-                लॉगिन: {user.name}
+                {user.name || 'केंद्रीय कार्यालयीन प्रशासक कक्ष'}
               </p>
             </div>
           </div>
@@ -437,11 +439,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </button>
               ) : (
                 <>
-                  <div className="text-xs bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-lg text-[#0f294a] font-semibold">
-                    जोडलेले खाते:{' '}
-                    <span className="font-bold">
-                      {googleUser.email || googleUser.displayName}
-                    </span>
+                  <div className="text-xs bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg text-emerald-800 font-semibold">
+                    Google Sheet जोडणी सज्ज
                   </div>
 
                   {sheetConfig?.spreadsheetId ? (
@@ -682,17 +681,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {/* आडव्या रांगेत सर्व अर्ज यादी (फक्त पाहण्यासाठी) */}
         {/* ============================================================== */}
         <div className="bg-white rounded-xl border border-sky-200 shadow-2xs overflow-hidden">
-          <div className="p-4 bg-sky-50/80 border-b border-sky-200 flex items-center justify-between flex-wrap gap-2">
-            <h3 className="font-bold text-[#0f294a] font-noto flex items-center gap-2 text-base">
-              <span>प्राप्त अर्जांची यादी</span>
-              <span className="text-xs bg-sky-200 text-[#0f294a] px-2.5 py-0.5 rounded-full font-mono font-bold">
-                {filteredApps.length} / {summary.total}
-              </span>
-            </h3>
-
-            <div className="text-xs sm:text-sm text-[#1e4070] font-medium">
-              अर्जदाराच्या नावावर क्लिक करून उभ्या फॉरमॅटमध्ये संपूर्ण अर्ज पाहता येईल व प्रिंट करता येईल.
+          <div className="p-4 bg-sky-50/80 border-b border-sky-200 flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <h3 className="font-bold text-[#0f294a] font-noto flex items-center gap-2 text-base">
+                <span>प्राप्त अर्जांची यादी</span>
+                <span className="text-xs bg-sky-200 text-[#0f294a] px-2.5 py-0.5 rounded-full font-mono font-bold">
+                  {filteredApps.length} / {summary.total}
+                </span>
+              </h3>
+              <p className="text-xs text-[#1e4070] font-medium mt-0.5">
+                अर्जदाराच्या नावावर क्लिक करून उभ्या फॉरमॅटमध्ये संपूर्ण अर्ज पाहता येईल व प्रिंट करता येईल.
+                {lastFetchedAt && (
+                  <span className="ml-2 text-slate-600">
+                    (अखेरचे लोड: {new Date(lastFetchedAt).toLocaleTimeString('en-IN')})
+                  </span>
+                )}
+              </p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => loadApplications(true)}
+              disabled={isRefreshing || loading}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-60"
+              title="नवीन आलेले अर्ज लोड करा"
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'तपासत आहे...' : 'नवीन अर्ज पहा'}
+            </button>
           </div>
 
           {fetchError ? (

@@ -1,8 +1,8 @@
 import {
   collection,
   doc,
-  getDoc,
-  onSnapshot,
+  getDocs,
+  limit,
   orderBy,
   query,
   serverTimestamp,
@@ -15,8 +15,11 @@ import { calculateAge } from './logic';
 import { SheetSyncResult } from './googleSheets';
 
 const APPLICATIONS_COLLECTION = 'applications';
-const SETTINGS_COLLECTION = 'settings';
-const GOOGLE_SHEET_DOC_ID = 'googleSheet';
+const APPS_CACHE_KEY = 'mss_cached_applications_v1';
+const SHEET_CONFIG_STORAGE_KEY = 'mss_google_sheet_config_v1';
+
+let memoryApplicationsCache: ApplicationFormData[] | null = null;
+let memoryCacheTimestamp: number | null = null;
 
 function trimToMax(val: unknown, maxLen: number): string {
   if (typeof val !== 'string') return '';
@@ -29,7 +32,9 @@ function generateClientApplicationId(): string {
   return `MSS-2026-${randomDigits}${suffix}`;
 }
 
-function sanitizeFamilyMembers(members: FamilyMember[] | undefined): FamilyMember[] {
+function sanitizeFamilyMembers(
+  members: FamilyMember[] | undefined
+): FamilyMember[] {
   if (!Array.isArray(members)) return [];
   return members.slice(0, 15).map((m, idx) => ({
     id: trimToMax(m.id || `fm-${idx + 1}`, 40),
@@ -40,6 +45,44 @@ function sanitizeFamilyMembers(members: FamilyMember[] | undefined): FamilyMembe
     occupation: trimToMax(m.occupation, 100),
     education: trimToMax(m.education, 100),
   }));
+}
+
+function writeLocalApplicationsCache(apps: ApplicationFormData[]) {
+  memoryApplicationsCache = apps;
+  memoryCacheTimestamp = Date.now();
+  try {
+    sessionStorage.setItem(
+      APPS_CACHE_KEY,
+      JSON.stringify({ timestamp: memoryCacheTimestamp, apps })
+    );
+  } catch {
+    // Ignore storage quota issues (photos may exceed sessionStorage 5MB)
+  }
+}
+
+function readLocalApplicationsCache(): {
+  apps: ApplicationFormData[];
+  timestamp: number;
+} | null {
+  if (memoryApplicationsCache && memoryCacheTimestamp) {
+    return { apps: memoryApplicationsCache, timestamp: memoryCacheTimestamp };
+  }
+  try {
+    const raw = sessionStorage.getItem(APPS_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as {
+      timestamp?: number;
+      apps?: ApplicationFormData[];
+    };
+    if (Array.isArray(parsed.apps) && typeof parsed.timestamp === 'number') {
+      memoryApplicationsCache = parsed.apps;
+      memoryCacheTimestamp = parsed.timestamp;
+      return { apps: parsed.apps, timestamp: parsed.timestamp };
+    }
+  } catch {
+    // Ignore parse error
+  }
+  return null;
 }
 
 export async function submitApplicationToFirestore(
@@ -64,7 +107,8 @@ export async function submitApplicationToFirestore(
     targetLevel: formData.targetLevel,
     division: trimToMax(formData.division, 100),
     targetDistrict: trimToMax(formData.targetDistrict, 100),
-    targetWing: trimToMax(formData.targetWing, 150) || 'मराठा सेवा संघ (मुख्य कक्ष)',
+    targetWing:
+      trimToMax(formData.targetWing, 150) || 'मराठा सेवा संघ (मुख्य कक्ष)',
     targetPost: trimToMax(formData.targetPost, 80),
     fullName: trimToMax(formData.fullName, 150),
     gender: formData.gender,
@@ -107,7 +151,7 @@ export async function submitApplicationToFirestore(
 
   try {
     await setDoc(doc(db, APPLICATIONS_COLLECTION, id), payload);
-    return {
+    const createdItem: ApplicationFormData = {
       ...formData,
       id,
       age: parsedAge,
@@ -115,12 +159,21 @@ export async function submitApplicationToFirestore(
       familyMembers: sanitizedMembers,
       createdAt: new Date().toISOString(),
     };
+
+    const existing = readLocalApplicationsCache();
+    if (existing) {
+      writeLocalApplicationsCache([createdItem, ...existing.apps]);
+    }
+
+    return createdItem;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, path);
   }
 }
 
-function mapDocToApplication(raw: Record<string, unknown>): ApplicationFormData {
+function mapDocToApplication(
+  raw: Record<string, unknown>
+): ApplicationFormData {
   const ts = raw.createdAt as Timestamp | string | undefined;
   const createdAtIso =
     ts && typeof (ts as Timestamp).toDate === 'function'
@@ -135,67 +188,60 @@ function mapDocToApplication(raw: Record<string, unknown>): ApplicationFormData 
   };
 }
 
-export function subscribeApplicationsFromFirestore(
-  onData: (apps: ApplicationFormData[]) => void,
-  onError: (err: Error) => void
-): () => void {
+/**
+ * Fetches applications once via getDocs (limit 500) and caches in memory/sessionStorage
+ * to avoid continuous real-time listener reads and preserve Firestore free-tier quota.
+ */
+export async function fetchApplicationsFromFirestore(
+  forceRefresh = false
+): Promise<{ apps: ApplicationFormData[]; fetchedAt: number; fromCache: boolean }> {
+  if (!forceRefresh) {
+    const cached = readLocalApplicationsCache();
+    if (cached) {
+      return {
+        apps: cached.apps,
+        fetchedAt: cached.timestamp,
+        fromCache: true,
+      };
+    }
+  }
+
   const q = query(
     collection(db, APPLICATIONS_COLLECTION),
-    orderBy('createdAt', 'desc')
+    orderBy('createdAt', 'desc'),
+    limit(500)
   );
 
-  return onSnapshot(
-    q,
-    (snapshot) => {
-      const list = snapshot.docs.map((d) =>
-        mapDocToApplication(d.data() as Record<string, unknown>)
-      );
-      onData(list);
-    },
-    (error) => {
-      try {
-        handleFirestoreError(error, OperationType.LIST, APPLICATIONS_COLLECTION);
-      } catch (wrapped) {
-        onError(wrapped instanceof Error ? wrapped : new Error(String(wrapped)));
-      }
-    }
-  );
-}
-
-export async function fetchSheetConfigFromFirestore(): Promise<SheetSyncResult | null> {
-  const path = `${SETTINGS_COLLECTION}/${GOOGLE_SHEET_DOC_ID}`;
   try {
-    const snap = await getDoc(
-      doc(db, SETTINGS_COLLECTION, GOOGLE_SHEET_DOC_ID)
+    const snapshot = await getDocs(q);
+    const list = snapshot.docs.map((d) =>
+      mapDocToApplication(d.data() as Record<string, unknown>)
     );
-    if (!snap.exists()) return null;
-    const data = snap.data();
+    writeLocalApplicationsCache(list);
     return {
-      spreadsheetId: String(data.spreadsheetId || ''),
-      spreadsheetUrl: String(data.spreadsheetUrl || ''),
-      sheetTitle: String(data.sheetTitle || 'अर्ज यादी'),
-      syncedCount: Number(data.syncedCount || 0),
-      lastSyncedAt: String(data.lastSyncedAt || ''),
+      apps: list,
+      fetchedAt: memoryCacheTimestamp || Date.now(),
+      fromCache: false,
     };
   } catch (error) {
-    handleFirestoreError(error, OperationType.GET, path);
+    handleFirestoreError(error, OperationType.LIST, APPLICATIONS_COLLECTION);
   }
 }
 
-export async function saveSheetConfigToFirestore(
-  config: SheetSyncResult
-): Promise<void> {
-  const path = `${SETTINGS_COLLECTION}/${GOOGLE_SHEET_DOC_ID}`;
+export function getStoredSheetConfig(): SheetSyncResult | null {
   try {
-    await setDoc(doc(db, SETTINGS_COLLECTION, GOOGLE_SHEET_DOC_ID), {
-      spreadsheetId: trimToMax(config.spreadsheetId, 150),
-      spreadsheetUrl: trimToMax(config.spreadsheetUrl, 400),
-      sheetTitle: trimToMax(config.sheetTitle, 120) || 'अर्ज यादी',
-      syncedCount: Math.max(0, Math.min(100000, Number(config.syncedCount) || 0)),
-      lastSyncedAt: trimToMax(config.lastSyncedAt, 60),
-      updatedAt: serverTimestamp(),
-    });
-  } catch (error) {
-    handleFirestoreError(error, OperationType.WRITE, path);
+    const raw = localStorage.getItem(SHEET_CONFIG_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as SheetSyncResult;
+  } catch {
+    return null;
+  }
+}
+
+export function saveStoredSheetConfig(config: SheetSyncResult): void {
+  try {
+    localStorage.setItem(SHEET_CONFIG_STORAGE_KEY, JSON.stringify(config));
+  } catch {
+    // Ignore localStorage failure
   }
 }
