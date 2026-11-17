@@ -39,26 +39,26 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/65 backdrop-blur-sm overflow-y-auto">
-      <div className="relative bg-white text-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-[#133b6e]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#291003]/65 backdrop-blur-sm overflow-y-auto">
+      <div className="relative bg-white text-[#29150b] rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-[#c2410c]">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1 rounded-lg cursor-pointer"
+          className="absolute top-4 right-4 text-[#8c5a3c] hover:text-[#431407] p-1 rounded-lg cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="text-center">
-          <div className="w-14 h-14 bg-sky-100 text-[#133b6e] rounded-full flex items-center justify-center mx-auto mb-2 shadow-inner border border-sky-300">
+          <div className="w-14 h-14 bhagwa-texture-medium text-[#7c2d12] rounded-full flex items-center justify-center mx-auto mb-2 shadow-inner border border-[#df9c5c]">
             <Lock className="w-7 h-7" />
           </div>
-          <h3 className="text-xl font-bold font-noto text-[#0f294a]">
+          <h3 className="text-xl font-bold font-noto text-[#5c1d05]">
             प्रशासक लॉगिन
           </h3>
-          <p className="text-xs text-slate-600 mt-1">
+          <p className="text-xs text-[#7c2d12] mt-1 font-medium">
             मराठा सेवा संघ - प्राप्त अर्ज पाहणे व Excel डाउनलोड
           </p>
         </div>
@@ -74,7 +74,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           <div>
             <label
               htmlFor="admin-password-input"
-              className="block text-sm font-bold text-[#0f294a] mb-1.5"
+              className="block text-sm font-bold text-[#5c1d05] mb-1.5"
             >
               पासवर्ड प्रविष्ट करा
             </label>
@@ -90,13 +90,13 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 placeholder="प्रशासक पासवर्ड टाका..."
                 autoFocus
                 required
-                className="w-full px-3.5 py-2.5 pr-10 border border-sky-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#133b6e] focus:ring-2 focus:ring-sky-100"
+                className="w-full px-3.5 py-2.5 pr-10 border border-[#df9c5c] rounded-xl text-sm text-[#29150b] focus:outline-none focus:border-[#c2410c] focus:ring-2 focus:ring-orange-100"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={showPassword ? 'पासवर्ड लपवा' : 'पासवर्ड पहा'}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[#133b6e] p-1 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8c5a3c] hover:text-[#9a3412] p-1 cursor-pointer"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -109,7 +109,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
           <button
             type="submit"
-            className="w-full py-2.5 px-4 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+            className="w-full py-2.5 px-4 bhagwa-texture-deep hover:brightness-95 text-white rounded-xl text-sm font-bold shadow-sm transition-all cursor-pointer border border-[#9a3412]"
           >
             प्रशासक लॉगिन करा
           </button>

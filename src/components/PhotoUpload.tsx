@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Camera, Upload, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Upload, Trash2, Image as ImageIcon } from 'lucide-react';
 
 interface PhotoUploadProps {
   photoUrl: string;
@@ -20,7 +20,6 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
       return;
     }
 
-    // Read and resize image through canvas for clean base64 storage
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new Image();
@@ -50,9 +49,8 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 bg-sky-50/50 border border-sky-200 rounded-xl p-4">
-      {/* Photo frame */}
-      <div className="w-32 h-40 border-2 border-dashed border-sky-400 rounded-lg overflow-hidden bg-white flex flex-col items-center justify-center relative shadow-2xs group">
+    <div className="flex flex-col sm:flex-row items-center gap-4 bhagwa-texture-soft border border-[#e9bd92] rounded-xl p-4">
+      <div className="w-32 h-40 border-2 border-dashed border-[#d97724] rounded-lg overflow-hidden bg-white flex flex-col items-center justify-center relative shadow-2xs group">
         {photoUrl ? (
           <>
             <img
@@ -70,18 +68,17 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
             </button>
           </>
         ) : (
-          <div className="text-center p-3 text-slate-400">
-            <ImageIcon className="w-8 h-8 mx-auto mb-1 text-sky-600" />
-            <span className="text-xs font-semibold text-slate-600 block">पासपोर्ट फोटो</span>
+          <div className="text-center p-3 text-[#8c5a3c]">
+            <ImageIcon className="w-8 h-8 mx-auto mb-1 text-[#c2410c]" />
+            <span className="text-xs font-semibold text-[#5c1d05] block">पासपोर्ट फोटो</span>
           </div>
         )}
       </div>
 
-      {/* Upload Controls */}
       <div className="flex-1 space-y-2 text-center sm:text-left">
         <div>
-          <h4 className="text-base font-bold text-[#0f294a]">अर्जदाराचा पासपोर्ट साईझ फोटो</h4>
-          <p className="text-sm text-slate-600 mt-0.5">
+          <h4 className="text-base font-bold text-[#5c1d05]">अर्जदाराचा पासपोर्ट साईझ फोटो</h4>
+          <p className="text-sm text-[#431407] mt-0.5">
             कृपया आपला स्पष्ट चेहरा असलेला अलिकडचा पासपोर्ट फोटो अपलोड करा.
           </p>
         </div>
@@ -99,7 +96,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-sm font-bold shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-sm font-bold shadow-xs transition-all cursor-pointer border border-[#9a3412]"
           >
             <Upload className="w-4 h-4" />
             फोटो निवडा
@@ -109,7 +106,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ photoUrl, onChange }) 
             <button
               type="button"
               onClick={handleRemove}
-              className="inline-flex items-center gap-1 px-3 py-2 bg-sky-100 hover:bg-sky-200 text-[#0f294a] rounded-lg text-sm font-medium transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 px-3 py-2 bg-[#ffedd5] hover:bg-[#fed7aa] text-[#5c1d05] rounded-lg text-sm font-semibold transition-colors cursor-pointer"
             >
               <Trash2 className="w-4 h-4 text-rose-600" />
               काढून टाका

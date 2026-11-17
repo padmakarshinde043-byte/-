@@ -8,6 +8,8 @@
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
     line-height: 1.6;
+    background-color: #fdf6ef;
+    color: #29150b;
   }
 }
 
@@ -18,22 +20,113 @@
   .font-noto {
     font-family: 'Noto Sans Devanagari', "Mukta", sans-serif;
   }
+
+  /* Deep rich textured Bhagwa banner / primary anchor */
+  .bhagwa-texture-deep {
+    background-color: #c2410c;
+    background-image:
+      linear-gradient(135deg, rgba(140, 38, 4, 0.78) 0%, rgba(214, 68, 8, 0.66) 50%, rgba(162, 43, 5, 0.78) 100%),
+      url('./assets/bhagwa_texture.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Medium textured Bhagwa sub-banner / active header strip */
+  .bhagwa-texture-medium {
+    background-color: #ffdfbd;
+    background-image:
+      linear-gradient(135deg, rgba(255, 224, 189, 0.88) 0%, rgba(254, 206, 156, 0.84) 55%, rgba(255, 229, 198, 0.88) 100%),
+      url('./assets/bhagwa_texture.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Light soft textured Bhagwa surface for section cards */
+  .bhagwa-texture-soft {
+    background-color: #fff3e4;
+    background-image:
+      linear-gradient(135deg, rgba(255, 248, 239, 0.94) 0%, rgba(255, 236, 214, 0.91) 55%, rgba(255, 245, 233, 0.94) 100%),
+      url('./assets/bhagwa_texture.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Subtle warm cream canvas grain */
+  .bhagwa-canvas {
+    background-color: #fdf6ef;
+    background-image:
+      radial-gradient(circle at top center, rgba(249, 115, 22, 0.08) 0%, transparent 55%),
+      radial-gradient(circle at bottom right, rgba(194, 65, 12, 0.06) 0%, transparent 45%);
+  }
 }
 
 @media print {
-  body {
-    background-color: white !important;
-    color: black !important;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
+  @page {
+    size: A4 portrait;
+    margin: 5mm;
   }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #1c0c04 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
   .no-print {
     display: none !important;
   }
+
   .print-only {
     display: block !important;
   }
-  .page-break {
-    page-break-before: always;
+
+  .print-modal-root {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+  }
+
+  .print-modal-shell {
+    position: static !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+  }
+
+  .print-scroll-area {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+
+  #printable-replica-document {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 6px 9px !important;
+    box-shadow: none !important;
+    border-width: 1.5px !important;
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 }

@@ -73,28 +73,30 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen flex flex-col bg-[#f2f7fc] text-slate-900 font-noto">
-        {currentView === 'admin' && adminUser ? (
-          <AdminDashboard
-            user={adminUser}
-            onLogout={handleAdminLogout}
-            onBackToForm={() => setCurrentView('form')}
-          />
-        ) : (
-          <>
-            <Header onOpenNoticeModal={() => setShowNoticeModal(true)} />
-
-            <main className="flex-1">
-              <ApplicationForm onSubmitSuccess={handleFormSubmitSuccess} />
-            </main>
-
-            <Footer
-              onAdminClick={handleAdminButtonClick}
-              isAdminLoggedIn={!!adminUser}
-              onGoToDashboard={() => setCurrentView('admin')}
+      <div className="min-h-screen flex flex-col bhagwa-canvas text-[#29150b] font-noto">
+        <div className={viewingReplicaApp ? 'no-print flex-1 flex flex-col' : 'flex-1 flex flex-col'}>
+          {currentView === 'admin' && adminUser ? (
+            <AdminDashboard
+              user={adminUser}
+              onLogout={handleAdminLogout}
+              onBackToForm={() => setCurrentView('form')}
             />
-          </>
-        )}
+          ) : (
+            <>
+              <Header onOpenNoticeModal={() => setShowNoticeModal(true)} />
+
+              <main className="flex-1">
+                <ApplicationForm onSubmitSuccess={handleFormSubmitSuccess} />
+              </main>
+
+              <Footer
+                onAdminClick={handleAdminButtonClick}
+                isAdminLoggedIn={!!adminUser}
+                onGoToDashboard={() => setCurrentView('admin')}
+              />
+            </>
+          )}
+        </div>
 
         <NoticeModal
           isOpen={showNoticeModal}

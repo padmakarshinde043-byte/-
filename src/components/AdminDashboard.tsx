@@ -69,13 +69,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   );
   const [linkCopied, setLinkCopied] = useState(false);
 
-  // Filters (View-only, no status/processing filters)
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('all');
   const [selectedWing, setSelectedWing] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
 
-  // Google Sheets Auth & Sync state
   const [googleUser, setGoogleUser] = useState<FirebaseUser | null>(null);
   const [needsGoogleAuth, setNeedsGoogleAuth] = useState(true);
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState(false);
@@ -132,7 +130,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     };
   }, []);
 
-  // Filter applications
   const filteredApps = applications.filter((app) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
@@ -173,7 +170,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     return summary.total;
   };
 
-  // Full Excel (.xlsx) Export containing ALL fields & family member sheet
   const handleExportExcel = () => {
     const dataToExport = applications;
     const sheetRows = [
@@ -226,7 +222,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     );
   };
 
-  // Copy Shareable Branded Link
   const handleCopyShareLink = async () => {
     const shareUrl = `${window.location.origin}/#maratha-seva-sangh`;
     try {
@@ -238,7 +233,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  // Google Sign-In for Sheets token
   const handleGoogleLogin = async () => {
     setIsGoogleLoggingIn(true);
     setSheetMessage(null);
@@ -264,7 +258,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     onLogout();
   };
 
-  // Execute Google Sheet Create or Update ONLY after explicit user confirmation modal
   const executeConfirmedSheetSync = async () => {
     const action = pendingSheetAction;
     if (!action) return;
@@ -315,27 +308,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#f2f7fc] text-slate-900 pb-16 font-noto">
-      {/* Top Admin Navigation - Light Sky Blue & Classic Navy */}
-      <nav className="bg-sky-50 text-[#0f294a] border-b-2 border-sky-200 px-4 py-3 sticky top-0 z-30 shadow-xs">
+    <div className="min-h-screen bhagwa-canvas text-[#29150b] pb-16 font-noto">
+      {/* Top Admin Navigation */}
+      <nav className="no-print bhagwa-texture-medium text-[#431407] border-b-2 border-[#e5ab75] px-4 py-3 sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onBackToForm}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-sky-100 text-[#133b6e] border border-sky-300 rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#fff4e6] text-[#7c2d12] border border-[#df9c5c] rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               सार्वजनिक अर्ज फॉर्मवर जा
             </button>
             <div>
-              <h1 className="text-base sm:text-lg font-extrabold text-[#0f294a] flex items-center gap-2">
+              <h1 className="text-base sm:text-lg font-extrabold text-[#5c1d05] flex items-center gap-2">
                 <span>मराठा सेवा संघ</span>
-                <span className="text-xs bg-sky-200/80 text-[#0f294a] border border-sky-300 px-2.5 py-0.5 rounded font-bold">
+                <span className="text-xs bhagwa-texture-deep text-white border border-[#9a3412] px-2.5 py-0.5 rounded font-bold">
                   प्रशासक माहिती कक्ष
                 </span>
               </h1>
-              <p className="text-xs text-[#1e4070] font-medium">
+              <p className="text-xs text-[#7c2d12] font-semibold">
                 {user.name || 'केंद्रीय कार्यालयीन प्रशासक कक्ष'}
               </p>
             </div>
@@ -345,7 +338,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <button
               type="button"
               onClick={handleCopyShareLink}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer border border-[#9a3412]"
               title="शेअर करण्यासाठी अर्ज लिंक कॉपी करा"
             >
               {linkCopied ? (
@@ -378,21 +371,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* ============================================================== */}
+      <div className="no-print max-w-7xl mx-auto px-4 py-6 space-y-6">
         {/* Google Sheets Sync Panel */}
-        {/* ============================================================== */}
         <section
           aria-label="Google Sheet माहिती जोडणी"
-          className="bg-white rounded-xl border border-sky-200 p-4 sm:p-5 shadow-2xs space-y-4"
+          className="bg-white rounded-xl border border-[#e9bd92] p-4 sm:p-5 shadow-2xs space-y-4"
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
-              <h2 className="text-base sm:text-lg font-bold text-[#0f294a] flex items-center gap-2">
+              <h2 className="text-base sm:text-lg font-bold text-[#5c1d05] flex items-center gap-2">
                 <Sheet className="w-5 h-5 text-emerald-600" />
                 Google Sheet वर सर्व अर्जांची माहिती जमा करा
               </h2>
-              <p className="text-xs sm:text-sm text-[#1e4070] font-medium">
+              <p className="text-xs sm:text-sm text-[#7c2d12] font-medium">
                 सर्व प्राप्त अर्जांची संपूर्ण माहिती थेट आपल्या Google Sheet मध्ये जतन व अद्ययावत करा.
               </p>
             </div>
@@ -449,7 +440,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         type="button"
                         onClick={() => setPendingSheetAction('update')}
                         disabled={isSyncingSheet}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-60"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer disabled:opacity-60 border border-[#9a3412]"
                       >
                         <RefreshCw
                           className={`w-4 h-4 ${isSyncingSheet ? 'animate-spin' : ''}`}
@@ -471,7 +462,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         type="button"
                         onClick={() => setPendingSheetAction('create')}
                         disabled={isSyncingSheet}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-sky-50 hover:bg-sky-100 text-[#133b6e] border border-sky-300 rounded-lg text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#fff4e6] hover:bg-[#ffe8cf] text-[#7c2d12] border border-[#df9c5c] rounded-lg text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60"
                       >
                         नवीन Sheet तयार करा
                       </button>
@@ -481,7 +472,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       type="button"
                       onClick={() => setPendingSheetAction('create')}
                       disabled={isSyncingSheet}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer disabled:opacity-60 border border-[#9a3412]"
                     >
                       <Sheet className="w-4 h-4" />
                       Google Sheet तयार करा व माहिती जमा करा
@@ -493,14 +484,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
 
           {sheetConfig?.spreadsheetUrl && (
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs bg-sky-50/70 border border-sky-200 rounded-lg px-3.5 py-2 text-[#0f294a]">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs bhagwa-texture-soft border border-[#e9bd92] rounded-lg px-3.5 py-2 text-[#5c1d05]">
               <div>
                 जोडलेले Google Sheet:{' '}
                 <strong className="font-bold">{sheetConfig.sheetTitle}</strong> | जमा केलेले अर्ज:{' '}
                 <strong className="font-mono">{sheetConfig.syncedCount}</strong>
               </div>
               {sheetConfig.lastSyncedAt && (
-                <div className="text-[#1e4070] font-medium">
+                <div className="text-[#7c2d12] font-medium">
                   अखेरचे अपडेट:{' '}
                   {new Date(sheetConfig.lastSyncedAt).toLocaleString('en-IN')}
                 </div>
@@ -526,30 +517,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           )}
         </section>
 
-        {/* ============================================================== */}
         {/* 4 कार्यकारिणी विभाग व एकूण अर्ज गोषवारा */}
-        {/* ============================================================== */}
         <section
           aria-label="कार्यकारिणी विभागानुसार अर्ज गोषवारा"
-          className="bg-white rounded-xl border border-sky-200 p-4 sm:p-5 shadow-2xs space-y-4"
+          className="bg-white rounded-xl border border-[#e9bd92] p-4 sm:p-5 shadow-2xs space-y-4"
         >
-          <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-sky-100">
-            <h3 className="text-base sm:text-lg font-bold text-[#0f294a] flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-[#133b6e]" />
+          <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-[#f3d4b4]">
+            <h3 className="text-base sm:text-lg font-bold text-[#5c1d05] flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-[#c2410c]" />
               प्राप्त अर्जांचा गोषवारा व कार्यकारिणी विभाग निवड
             </h3>
-            <div className="flex items-center gap-3 text-xs sm:text-sm text-[#1e4070] font-semibold">
-              <span className="inline-flex items-center gap-1 bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">
-                <Users className="w-4 h-4 text-[#133b6e]" />
+            <div className="flex items-center gap-3 text-xs sm:text-sm text-[#7c2d12] font-semibold">
+              <span className="inline-flex items-center gap-1 bhagwa-texture-soft border border-[#e9bd92] px-3 py-1 rounded-lg">
+                <Users className="w-4 h-4 text-[#c2410c]" />
                 एकूण अर्ज:{' '}
-                <strong className="font-mono text-[#0f294a]">
+                <strong className="font-mono text-[#5c1d05]">
                   {summary.total}
                 </strong>
               </span>
-              <span className="inline-flex items-center gap-1 bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">
-                <IndianRupee className="w-4 h-4 text-[#133b6e]" />
+              <span className="inline-flex items-center gap-1 bhagwa-texture-soft border border-[#e9bd92] px-3 py-1 rounded-lg">
+                <IndianRupee className="w-4 h-4 text-[#c2410c]" />
                 मासिक संकल्प:{' '}
-                <strong className="font-mono text-[#0f294a]">
+                <strong className="font-mono text-[#5c1d05]">
                   ₹{summary.totalMonthlyPledge.toLocaleString('en-IN')}
                 </strong>
               </span>
@@ -560,10 +549,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <button
               type="button"
               onClick={() => setSelectedLevel('all')}
-              className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 selectedLevel === 'all'
-                  ? 'bg-[#133b6e] text-white border-[#133b6e] shadow-xs'
-                  : 'bg-sky-50/60 text-[#0f294a] border-sky-200 hover:bg-sky-100/70'
+                  ? 'bhagwa-texture-deep text-white border-[#9a3412] shadow-xs'
+                  : 'bhagwa-texture-soft text-[#5c1d05] border-[#e9bd92] hover:brightness-97'
               }`}
             >
               <span>सर्व कार्यकारिणी</span>
@@ -571,7 +560,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 className={`px-2 py-0.5 rounded-full text-xs font-mono ${
                   selectedLevel === 'all'
                     ? 'bg-white/20 text-white'
-                    : 'bg-sky-200/80 text-[#0f294a]'
+                    : 'bg-[#fed7aa] text-[#5c1d05]'
                 }`}
               >
                 {summary.total}
@@ -585,10 +574,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   key={body}
                   type="button"
                   onClick={() => setSelectedLevel(body)}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-colors cursor-pointer text-left ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-all cursor-pointer text-left ${
                     active
-                      ? 'bg-[#133b6e] text-white border-[#133b6e] shadow-xs'
-                      : 'bg-sky-50/60 text-[#0f294a] border-sky-200 hover:bg-sky-100/70'
+                      ? 'bhagwa-texture-deep text-white border-[#9a3412] shadow-xs'
+                      : 'bhagwa-texture-soft text-[#5c1d05] border-[#e9bd92] hover:brightness-97'
                   }`}
                 >
                   <span className="truncate pr-1">{body}</span>
@@ -596,7 +585,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     className={`px-2 py-0.5 rounded-full text-xs font-mono flex-shrink-0 ${
                       active
                         ? 'bg-white/20 text-white'
-                        : 'bg-sky-200/80 text-[#0f294a]'
+                        : 'bg-[#fed7aa] text-[#5c1d05]'
                     }`}
                   >
                     {getLevelCount(body)}
@@ -608,27 +597,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </section>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white p-4 rounded-xl border border-sky-200 shadow-2xs space-y-3">
+        <div className="bg-white p-4 rounded-xl border border-[#e9bd92] shadow-2xs space-y-3">
           <div className="relative w-full sm:max-w-md">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#133b6e]" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#c2410c]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="नाव, मोबाईल, गाव, नोंदणी क्र., कक्ष किंवा पदाने शोधा..."
-              className="w-full pl-9 pr-3 py-2 border border-sky-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:border-[#133b6e] focus:ring-2 focus:ring-sky-100"
+              className="w-full pl-9 pr-3 py-2 border border-[#e7b587] rounded-lg text-xs sm:text-sm focus:outline-none focus:border-[#c2410c] focus:ring-2 focus:ring-orange-100"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-sky-100 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-[#f3d4b4] text-xs">
             <div>
-              <label className="text-[11px] text-slate-600 font-semibold block mb-0.5">
+              <label className="text-[11px] text-[#7c2d12] font-semibold block mb-0.5">
                 जिल्हा:
               </label>
               <select
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="w-full px-2.5 py-1.5 border border-sky-200 rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#133b6e]"
+                className="w-full px-2.5 py-1.5 border border-[#e7b587] rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#c2410c]"
               >
                 <option value="all">सर्व जिल्हे</option>
                 {MAHARASHTRA_DISTRICTS.map((d) => (
@@ -640,13 +629,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             <div>
-              <label className="text-[11px] text-slate-600 font-semibold block mb-0.5">
+              <label className="text-[11px] text-[#7c2d12] font-semibold block mb-0.5">
                 मराठा सेवा संघ कक्ष:
               </label>
               <select
                 value={selectedWing}
                 onChange={(e) => setSelectedWing(e.target.value)}
-                className="w-full px-2.5 py-1.5 border border-sky-200 rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#133b6e]"
+                className="w-full px-2.5 py-1.5 border border-[#e7b587] rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#c2410c]"
               >
                 <option value="all">सर्व 33 कक्ष</option>
                 {MARATHA_SEVA_SANGH_WINGS.map((w) => (
@@ -658,13 +647,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             <div>
-              <label className="text-[11px] text-slate-600 font-semibold block mb-0.5">
+              <label className="text-[11px] text-[#7c2d12] font-semibold block mb-0.5">
                 कार्यकारिणी स्तर:
               </label>
               <select
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
-                className="w-full px-2.5 py-1.5 border border-sky-200 rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#133b6e]"
+                className="w-full px-2.5 py-1.5 border border-[#e7b587] rounded-md bg-white text-xs font-medium focus:outline-none focus:border-[#c2410c]"
               >
                 <option value="all">सर्व कार्यकारिणी</option>
                 {EXECUTIVE_BODIES.map((l) => (
@@ -677,22 +666,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* आडव्या रांगेत सर्व अर्ज यादी (फक्त पाहण्यासाठी) */}
-        {/* ============================================================== */}
-        <div className="bg-white rounded-xl border border-sky-200 shadow-2xs overflow-hidden">
-          <div className="p-4 bg-sky-50/80 border-b border-sky-200 flex items-center justify-between flex-wrap gap-3">
+        {/* Applications Table */}
+        <div className="bg-white rounded-xl border border-[#e9bd92] shadow-2xs overflow-hidden">
+          <div className="p-4 bhagwa-texture-soft border-b border-[#e5ab75] flex items-center justify-between flex-wrap gap-3">
             <div>
-              <h3 className="font-bold text-[#0f294a] font-noto flex items-center gap-2 text-base">
+              <h3 className="font-bold text-[#5c1d05] font-noto flex items-center gap-2 text-base">
                 <span>प्राप्त अर्जांची यादी</span>
-                <span className="text-xs bg-sky-200 text-[#0f294a] px-2.5 py-0.5 rounded-full font-mono font-bold">
+                <span className="text-xs bg-[#fed7aa] text-[#5c1d05] px-2.5 py-0.5 rounded-full font-mono font-bold border border-[#df9c5c]">
                   {filteredApps.length} / {summary.total}
                 </span>
               </h3>
-              <p className="text-xs text-[#1e4070] font-medium mt-0.5">
+              <p className="text-xs text-[#7c2d12] font-medium mt-0.5">
                 अर्जदाराच्या नावावर क्लिक करून उभ्या फॉरमॅटमध्ये संपूर्ण अर्ज पाहता येईल व प्रिंट करता येईल.
                 {lastFetchedAt && (
-                  <span className="ml-2 text-slate-600">
+                  <span className="ml-2 text-[#5c1d05]">
                     (अखेरचे लोड: {new Date(lastFetchedAt).toLocaleTimeString('en-IN')})
                   </span>
                 )}
@@ -703,7 +690,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               type="button"
               onClick={() => loadApplications(true)}
               disabled={isRefreshing || loading}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer disabled:opacity-60 border border-[#9a3412]"
               title="नवीन आलेले अर्ज लोड करा"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -716,16 +703,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {fetchError}
             </div>
           ) : loading ? (
-            <div className="p-12 text-center text-[#133b6e]">
-              <div className="w-8 h-8 border-4 border-[#133b6e] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+            <div className="p-12 text-center text-[#c2410c]">
+              <div className="w-8 h-8 border-4 border-[#c2410c] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
               <p className="text-sm font-medium">माहिती लोड होत आहे...</p>
             </div>
           ) : filteredApps.length === 0 ? (
-            <div className="p-12 text-center text-slate-600">
+            <div className="p-12 text-center text-[#5c1d05]">
               <p className="text-base font-bold">
                 अद्याप या विभागामध्ये कोणताही अर्ज प्राप्त झालेला नाही.
               </p>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-[#8c5a3c] mt-1">
                 नवीन अर्ज भरताच ते येथे आपोआप दिसतील.
               </p>
             </div>
@@ -733,7 +720,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs sm:text-sm border-collapse">
                 <thead>
-                  <tr className="bg-sky-100/90 text-[#0f294a] font-bold border-b border-sky-200">
+                  <tr className="bhagwa-texture-medium text-[#431407] font-bold border-b border-[#df9c5c]">
                     <th className="p-3 text-center whitespace-nowrap">नोंदणी क्र.</th>
                     <th className="p-3 whitespace-nowrap">अर्जदाराचे नाव</th>
                     <th className="p-3 whitespace-nowrap">मोबाईल व संपर्क</th>
@@ -743,19 +730,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <th className="p-3 text-center whitespace-nowrap">अर्ज पहा</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-sky-100">
+                <tbody className="divide-y divide-[#f3d4b4]">
                   {filteredApps.map((app) => (
-                    <tr key={app.id} className="hover:bg-sky-50/50 transition-colors">
-                      <td className="p-3 text-center font-mono font-bold text-[#133b6e] whitespace-nowrap">
+                    <tr key={app.id} className="hover:bg-[#fff7ed] transition-colors">
+                      <td className="p-3 text-center font-mono font-bold text-[#9a3412] whitespace-nowrap">
                         {app.id}
-                        <span className="block text-[11px] text-slate-500 font-sans">
+                        <span className="block text-[11px] text-[#8c5a3c] font-sans">
                           {app.submissionDate}
                         </span>
                       </td>
 
                       <td className="p-3">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 rounded-full border border-sky-300 bg-sky-50 overflow-hidden flex items-center justify-center flex-shrink-0">
+                          <div className="w-9 h-9 rounded-full border border-[#df9c5c] bg-[#fff5e8] overflow-hidden flex items-center justify-center flex-shrink-0">
                             {app.photoUrl ? (
                               <img
                                 src={app.photoUrl}
@@ -763,7 +750,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <span className="text-xs font-bold text-[#133b6e]">
+                              <span className="text-xs font-bold text-[#9a3412]">
                                 {app.fullName?.charAt(0) || 'म'}
                               </span>
                             )}
@@ -772,12 +759,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <button
                               type="button"
                               onClick={() => setSelectedApp(app)}
-                              className="text-left font-bold text-[#0f294a] hover:text-[#133b6e] hover:underline text-sm sm:text-base cursor-pointer focus:outline-none"
+                              className="text-left font-bold text-[#431407] hover:text-[#c2410c] hover:underline text-sm sm:text-base cursor-pointer focus:outline-none"
                               title="उभ्या फॉरमॅटमध्ये संपूर्ण माहिती पहा"
                             >
                               {app.fullName}
                             </button>
-                            <div className="text-xs text-slate-500">
+                            <div className="text-xs text-[#8c5a3c]">
                               {app.gender} • वय: {app.age || '-'} वर्षे •{' '}
                               {app.occupationType}
                             </div>
@@ -786,33 +773,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </td>
 
                       <td className="p-3 space-y-0.5 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5 font-mono text-slate-800 font-semibold">
-                          <Phone className="w-3.5 h-3.5 text-[#133b6e]" />
+                        <div className="flex items-center gap-1.5 font-mono text-[#29150b] font-semibold">
+                          <Phone className="w-3.5 h-3.5 text-[#c2410c]" />
                           <span>{app.mobile}</span>
                         </div>
                         {app.email && (
-                          <div className="flex items-center gap-1.5 text-slate-500 text-xs truncate max-w-[170px]">
-                            <Mail className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="flex items-center gap-1.5 text-[#7c2d12] text-xs truncate max-w-[170px]">
+                            <Mail className="w-3.5 h-3.5 text-[#c2783e]" />
                             <span>{app.email}</span>
                           </div>
                         )}
                       </td>
 
                       <td className="p-3">
-                        <div className="font-semibold text-slate-900">
+                        <div className="font-semibold text-[#29150b]">
                           {app.district}
                         </div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-[#7c2d12]">
                           {app.village}
                           {app.taluka ? `, ता. ${app.taluka}` : ''}
                         </div>
                       </td>
 
                       <td className="p-3">
-                        <div className="font-bold text-[#133b6e]">
+                        <div className="font-bold text-[#9a3412]">
                           {app.targetLevel}
                         </div>
-                        <div className="text-xs font-semibold text-slate-700">
+                        <div className="text-xs font-semibold text-[#431407]">
                           पद: {app.targetPost}
                           {app.targetLevel === 'विभागीय कार्यकारिणी' &&
                           app.division
@@ -827,15 +814,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <td className="p-3 text-right whitespace-nowrap">
                         {app.monthlyContribution ? (
                           <>
-                            <div className="font-bold font-mono text-slate-900">
+                            <div className="font-bold font-mono text-[#29150b]">
                               ₹{app.monthlyContribution}/-
                             </div>
-                            <div className="text-[11px] text-slate-500">
+                            <div className="text-[11px] text-[#7c2d12]">
                               {app.paymentFrequency || 'सहामाही'}
                             </div>
                           </>
                         ) : (
-                          <div className="text-slate-400 text-xs italic">
+                          <div className="text-[#a1785a] text-xs italic">
                             ऐच्छिक
                           </div>
                         )}
@@ -845,7 +832,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <button
                           type="button"
                           onClick={() => setSelectedApp(app)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-xs font-semibold transition-all cursor-pointer border border-[#9a3412]"
                           title="उभ्या फॉरमॅटमध्ये संपूर्ण अर्ज पहा व प्रिंट करा"
                           aria-label={`${app.fullName} संपूर्ण अर्ज पहा`}
                         >
@@ -862,16 +849,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </div>
 
-      {/* Mandatory User Confirmation Modal before writing/updating Google Sheet */}
+      {/* Confirmation Modal */}
       {pendingSheetAction && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-sky-200 shadow-2xl space-y-4">
+        <div className="no-print fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#291003]/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 border-2 border-[#c2410c] shadow-2xl space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-full bg-sky-100 text-[#133b6e] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bhagwa-texture-medium text-[#7c2d12] flex items-center justify-center flex-shrink-0 border border-[#df9c5c]">
                   <Sheet className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-bold text-[#0f294a]">
+                <h3 className="text-lg font-bold text-[#5c1d05]">
                   Google Sheet मध्ये माहिती जमा करायची का?
                 </h3>
               </div>
@@ -879,13 +866,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 type="button"
                 onClick={() => setPendingSheetAction(null)}
                 aria-label="बंद करा"
-                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                className="text-[#8c5a3c] hover:text-[#431407] p-1 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-sky-50 border border-sky-200 rounded-xl p-3.5 text-sm text-[#0f294a] space-y-1.5">
+            <div className="bhagwa-texture-soft border border-[#e9bd92] rounded-xl p-3.5 text-sm text-[#431407] space-y-1.5">
               {pendingSheetAction === 'update' && sheetConfig ? (
                 <p>
                   सध्याच्या जोडलेल्या Google Sheet मध्ये{' '}
@@ -904,14 +891,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 type="button"
                 onClick={() => setPendingSheetAction(null)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition-colors cursor-pointer"
+                className="px-4 py-2 bg-[#fff4e6] hover:bg-[#ffe8cf] text-[#5c1d05] rounded-lg text-sm font-semibold transition-colors cursor-pointer"
               >
                 रद्द करा
               </button>
               <button
                 type="button"
                 onClick={executeConfirmedSheetSync}
-                className="px-4 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-sm font-bold shadow-xs transition-colors cursor-pointer"
+                className="px-4 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-sm font-bold shadow-xs transition-all cursor-pointer border border-[#9a3412]"
               >
                 होय, माहिती सेव्ह करा
               </button>

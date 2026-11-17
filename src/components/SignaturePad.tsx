@@ -136,25 +136,25 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
   };
 
   return (
-    <div className="bg-sky-50/50 border border-sky-200 rounded-xl p-4">
+    <div className="bhagwa-texture-soft border border-[#e9bd92] rounded-xl p-4">
       <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
         <div>
-          <h4 className="text-base font-bold text-[#0f294a] flex items-center gap-1.5">
-            <PenTool className="w-4 h-4 text-[#133b6e]" />
+          <h4 className="text-base font-bold text-[#5c1d05] flex items-center gap-1.5">
+            <PenTool className="w-4 h-4 text-[#c2410c]" />
             अर्जदाराची स्वाक्षरी
           </h4>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-[#431407]">
             खालील बॉक्समध्ये बोटाने / माऊसने स्वाक्षरी करा किंवा स्वाक्षरीचा फोटो अपलोड करा.
           </p>
         </div>
 
         {/* Toggle Mode */}
-        <div className="flex items-center gap-1 bg-sky-100 p-0.5 rounded-lg text-xs border border-sky-200">
+        <div className="flex items-center gap-1 bg-[#ffedd5] p-0.5 rounded-lg text-xs border border-[#df9c5c]">
           <button
             type="button"
             onClick={() => setMode('draw')}
             className={`px-2.5 py-1 rounded-md font-semibold transition-colors cursor-pointer ${
-              mode === 'draw' ? 'bg-white text-[#0f294a] shadow-xs' : 'text-[#133b6e] hover:text-[#091e3a]'
+              mode === 'draw' ? 'bg-white text-[#5c1d05] shadow-xs' : 'text-[#9a3412] hover:text-[#431407]'
             }`}
           >
             स्वाक्षरी करा
@@ -163,7 +163,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
             type="button"
             onClick={() => setMode('upload')}
             className={`px-2.5 py-1 rounded-md font-semibold transition-colors cursor-pointer ${
-              mode === 'upload' ? 'bg-white text-[#0f294a] shadow-xs' : 'text-[#133b6e] hover:text-[#091e3a]'
+              mode === 'upload' ? 'bg-white text-[#5c1d05] shadow-xs' : 'text-[#9a3412] hover:text-[#431407]'
             }`}
           >
             अपलोड करा
@@ -173,7 +173,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
 
       {mode === 'draw' ? (
         <div>
-          <div className="relative border-2 border-dashed border-sky-400 rounded-xl bg-white overflow-hidden shadow-2xs">
+          <div className="relative border-2 border-dashed border-[#d97724] rounded-xl bg-white overflow-hidden shadow-2xs">
             <canvas
               ref={canvasRef}
               onMouseDown={startDrawing}
@@ -186,14 +186,14 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
               className="w-full h-32 cursor-crosshair touch-none"
             />
             {!hasDrawn && !signatureUrl && (
-              <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-sm text-slate-400">
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-sm text-[#a1785a]">
                 येथे स्वाक्षरी करा
               </div>
             )}
           </div>
 
           <div className="mt-2 flex items-center justify-between text-xs sm:text-sm">
-            <span className="text-slate-600">
+            <span className="text-[#431407]">
               {signatureUrl ? (
                 <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
                   <Check className="w-4 h-4" /> स्वाक्षरी नोंदवली गेली आहे
@@ -205,7 +205,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
             <button
               type="button"
               onClick={handleClear}
-              className="inline-flex items-center gap-1 px-3 py-1 bg-sky-100 hover:bg-sky-200 text-[#0f294a] rounded-md transition-colors font-medium cursor-pointer"
+              className="inline-flex items-center gap-1 px-3 py-1 bg-[#ffedd5] hover:bg-[#fed7aa] text-[#5c1d05] rounded-md transition-colors font-semibold cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" /> पुसून टाका
             </button>
@@ -221,13 +221,13 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
             className="hidden"
           />
 
-          <div className="border-2 border-dashed border-sky-400 rounded-xl p-4 bg-white text-center">
+          <div className="border-2 border-dashed border-[#d97724] rounded-xl p-4 bg-white text-center">
             {signatureUrl ? (
               <div className="space-y-2">
                 <img
                   src={signatureUrl}
                   alt="अर्जदार स्वाक्षरी"
-                  className="max-h-24 max-w-xs mx-auto object-contain border border-sky-200 p-1 rounded bg-sky-50/40"
+                  className="max-h-24 max-w-xs mx-auto object-contain border border-[#e7b587] p-1 rounded bg-[#fff8f0]"
                 />
                 <button
                   type="button"
@@ -239,13 +239,13 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ signatureUrl, onChan
               </div>
             ) : (
               <div className="space-y-2">
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-[#431407]">
                   कागदावर स्वाक्षरी करून त्याचा स्पष्ट फोटो काढून येथे अपलोड करा.
                 </p>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#133b6e] hover:bg-[#0d2c54] text-white rounded-lg text-sm font-bold shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bhagwa-texture-deep hover:brightness-95 text-white rounded-lg text-sm font-bold shadow-xs transition-all cursor-pointer border border-[#9a3412]"
                 >
                   <Upload className="w-4 h-4" /> स्वाक्षरी फाईल निवडा
                 </button>
