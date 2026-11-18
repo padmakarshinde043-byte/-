@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
   body {
+    color-scheme: light;
     font-family: "Noto Sans Devanagari", "Mukta", "Mangal", "Lohit Marathi", system-ui, -apple-system, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -68,6 +74,7 @@
 
   html,
   body {
+    color-scheme: light !important;
     background: #ffffff !important;
     color: #1c0c04 !important;
     margin: 0 !important;
@@ -128,5 +135,29 @@
     line-height: 1.25 !important;
     break-inside: avoid !important;
     page-break-inside: avoid !important;
+    background: #ffffff !important;
+    color: #29150b !important;
+  }
+
+  .print-a4-grid-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .print-a4-grid-2 > :first-child {
+    border-bottom-width: 0 !important;
+    border-right: 1px solid rgba(124, 45, 18, 0.5) !important;
+  }
+
+  .print-a4-grid-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .print-a4-row-between {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
   }
 }
